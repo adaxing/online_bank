@@ -2,13 +2,27 @@ package com.userfront.domain;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class Appointment {
+	// indicates id is primary key
+	@Id
+	// Every new record, increase by 1
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private Date date;
 	private String location;
 	private String description;
 	private boolean confirmed;
 	
+	@ManyToOne
+	@JoinColumn(name = "user_id")
 	private User user;
 
 	public Long getId() {

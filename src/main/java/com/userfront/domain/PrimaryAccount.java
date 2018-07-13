@@ -3,11 +3,32 @@ package com.userfront.domain;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Entity
 public class PrimaryAccount {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private int accountNumber;
 	private BigDecimal accountBalance;
 	
+	// one account can have more than one transactions
+	// within primaryTransactionList there will be primaryAccount field, primaryAccount type
+	// cascade type all means whatever changes/updates will influence 
+	// fetch lazy means use that until it needs, booster performance
+	@OneToMany(mappedBy = "primaryAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	// round reference relationship, infinite loop, json is to break loop 
+	@JsonIgnore
 	private List<PrimaryTransaction> primaryTransactionList;
 
 	public Long getId() {
