@@ -2,18 +2,45 @@ package com.userfront.domain;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Entity
 public class User {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	// database, userId field can not be null;
+	// updatable is false means it can not be updated once it is given initial value
+	// this is example for adding more columns corresponds 
+	@Column(name = "userId", nullable = false, updatable = false)
 	private Long userId;
 	private String username;
 	private String firstName;
 	private String lastName;
 	private String password;
+	
+	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 	private String phone;
 	
+	@OneToOne
 	private PrimaryAccount primaryAccount;
+	@OneToOne
 	private SavingsAccount savingsAccount;
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
 	private List<Appointment> appointmentList;
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Recipient> recipientList;
 	
 	private boolean enable=true;
