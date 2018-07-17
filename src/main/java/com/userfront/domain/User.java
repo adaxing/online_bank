@@ -140,6 +140,14 @@ public class User {
 	public void setEnable(boolean enable) {
 		this.enable = enable;
 	}
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", username=" + username + ", firstName=" + firstName + ", lastName="
+				+ lastName + ", password=" + password + ", email=" + email + ", phone=" + phone + ", primaryAccount="
+				+ primaryAccount + ", savingsAccount=" + savingsAccount + ", appointmentList=" + appointmentList
+				+ ", recipientList=" + recipientList + ", enable=" + enable + "]";
+	}
 	
 	
 	
