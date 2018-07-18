@@ -13,11 +13,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.userfront.domain.User;
 import com.userfront.domain.security.UserRole;
 import com.userfront.service.UserService;
+import com.userfront.service.Dao.RoleDao;
 
 @Controller
 public class HomeController {
 	@Autowired 
-	private UserService userService; 
+	private UserService userService;
+	
+	// better to use role service, which connect to roledao
+	@Autowired
+	private RoleDao roleDao; 
 	
 	@RequestMapping("/")
 	public String home() {
@@ -51,10 +56,10 @@ public class HomeController {
 			}
 			return "signup";
 		} else {
-			//Set<UserRole> userRoles = new HashSet<>();
-			//userRoles.add(new UserRole(user, roleDao.findByName("USER")));
+			Set<UserRole> userRoles = new HashSet<>();
+			userRoles.add(new UserRole(user, roleDao.findByName("ROLE_USER")));
 			//userService.createUser(user, userRoles);
-			userService.create(user);
+			userService.createUser(user,userRoles);
 			
 			return "redirect:/";
 		}

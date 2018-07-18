@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.userfront.domain.User;
 import com.userfront.domain.security.UserRole;
+import com.userfront.service.AccountService;
 import com.userfront.service.UserService;
 import com.userfront.service.Dao.RoleDao;
 import com.userfront.service.Dao.UserDao;
@@ -32,6 +33,9 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	public BCryptPasswordEncoder passwordEncoder;
+
+	@Autowired
+	private AccountService accountService;
 	
 	public void save(User user) {
 		userDao.save(user);
