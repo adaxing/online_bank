@@ -26,8 +26,7 @@ public class PrimaryTransaction {
 	public PrimaryTransaction() {}
 
 	public PrimaryTransaction(Date date, String description, String type, String status, double amount,
-			BigDecimal availableBalance) {
-		super();
+			BigDecimal availableBalance, PrimaryAccount primaryAccount) {
 		this.date = date;
 		this.description = description;
 		this.type = type;
