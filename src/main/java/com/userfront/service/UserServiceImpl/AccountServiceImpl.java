@@ -68,7 +68,7 @@ public class AccountServiceImpl implements AccountService{
 	}
 	
 	// take number now-> double
-		public void withdrawl(String accountType, double amount, Principal principal) {
+		public void withdraw(String accountType, double amount, Principal principal) {
 			User user = userService.findByUsername(principal.getName());
 			// use principal to find user
 			if(accountType.equalsIgnoreCase("Primary")) {
