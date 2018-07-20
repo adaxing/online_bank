@@ -64,23 +64,32 @@ public class TransactionServiceImpl implements TransactionService {
 		savingsTransactionDao.save(savingsTransaction);
 	}
 	
-	public void betweenAccountTransfer(String transferFrom, String transferTo,String amount,PrimaryAccount primaryAccount,SavingsAccount savingsAccount) {
+	public void betweenAccountTransfer(String transferFrom, String transferTo,String amount,PrimaryAccount primaryAccount,SavingsAccount savingsAccount) throws Exception {
 		if (transferFrom.equalsIgnoreCase("Primary") && transferTo.equalsIgnoreCase("Savings")) {
+			Double x = Double.parseDouble("-"+ amount);
 			primaryAccount.setAccountBalance(primaryAccount.getAccountBalance().subtract(new BigDecimal(amount)));
 			savingsAccount.setAccountBalance(savingsAccount.getAccountBalance().add(new BigDecimal(amount)));
 			primaryAccountDao.save(primaryAccount);
 			savingsAccountDao.save(savingsAccount);
 			Date date = new Date();
-			PrimaryTransaction primaryTransaction = new PrimaryTransaction(date, "Between account transfer from "+transferFrom+" to "+transferTo, "Account", "Finished", Double.parseDouble(amount), primaryAccount.getAccountBalance(), primaryAccount );
+			PrimaryTransaction primaryTransaction = new PrimaryTransaction(date, "Between account transfer from "+transferFrom+" to "+transferTo, "Account", "Finished", x, primaryAccount.getAccountBalance(), primaryAccount );
+			SavingsTransaction savingsTransaction = new SavingsTransaction(date, "Between account transfer from "+transferFrom+" to "+transferTo, "Account", "Finished", Double.parseDouble(amount), savingsAccount.getAccountBalance(), savingsAccount);
 			primaryTransactionDao.save(primaryTransaction);
+			savingsTransactionDao.save(savingsTransaction);
+
 		} else if (transferFrom.equalsIgnoreCase("Savings") && transferTo.equalsIgnoreCase("Primary")) {
+			Double x = Double.parseDouble("-"+ amount);
 			primaryAccount.setAccountBalance(primaryAccount.getAccountBalance().add(new BigDecimal(amount)));
 			savingsAccount.setAccountBalance(savingsAccount.getAccountBalance().subtract(new BigDecimal(amount)));
 			primaryAccountDao.save(primaryAccount);
 			savingsAccountDao.save(savingsAccount);
 			Date date = new Date();
-			SavingsTransaction savingsTransaction = new SavingsTransaction(date, "Between account transfer from "+transferFrom+" to "+transferTo, "Account", "Finished", Double.parseDouble(amount), savingsAccount.getAccountBalance(), savingsAccount);
+			SavingsTransaction savingsTransaction = new SavingsTransaction(date, "Between account transfer from "+transferFrom+" to "+transferTo, "Account", "Finished", x, savingsAccount.getAccountBalance(), savingsAccount);
+			PrimaryTransaction primaryTransaction = new PrimaryTransaction(date, "Between account transfer from "+transferFrom+" to "+transferTo, "Account", "Finished", Double.parseDouble(amount), primaryAccount.getAccountBalance(), primaryAccount );
 			savingsTransactionDao.save(savingsTransaction);
+			primaryTransactionDao.save(primaryTransaction);
+		} else {
+			throw new Exception("Invalid Transfer");
 		}
 	} 
 

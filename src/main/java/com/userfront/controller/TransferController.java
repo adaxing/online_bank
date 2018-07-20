@@ -24,17 +24,17 @@ public class TransferController {
 	@Autowired
 	private TransactionService transactionService;
 	
-	@RequestMapping(value = "/betweenAccount", method = RequestMethod.GET)
-	public String betweenAccount(Model model) {
+	@RequestMapping(value = "/betweenAccounts", method = RequestMethod.GET)
+	public String betweenAccounts(Model model) {
 		model.addAttribute("transferFrom", "");
 		model.addAttribute("transferTo","");
 		model.addAttribute("amount","");
-		return "betweenAccount";
+		return "betweenAccounts";
 		
 	}
 	
-	@RequestMapping(value = "/betweenAccount", method = RequestMethod.POST)
-	public String betweenAccountPost(@ModelAttribute("transferFrom") String transferFrom,@ModelAttribute("transferTo") String transferTo, @ModelAttribute("amount") String amount, Principal principal) 
+	@RequestMapping(value = "/betweenAccounts", method = RequestMethod.POST)
+	public String betweenAccountsPost(@ModelAttribute("transferFrom") String transferFrom,@ModelAttribute("transferTo") String transferTo, @ModelAttribute("amount") String amount, Principal principal) 
 	throws Exception{
 		User user = userService.findByUsername(principal.getName());
 		PrimaryAccount primaryAccount = user.getPrimaryAccount();
