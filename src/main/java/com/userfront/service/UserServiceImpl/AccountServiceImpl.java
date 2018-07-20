@@ -13,6 +13,7 @@ import com.userfront.domain.SavingsAccount;
 import com.userfront.domain.SavingsTransaction;
 import com.userfront.domain.User;
 import com.userfront.service.AccountService;
+import com.userfront.service.TransactionService;
 import com.userfront.service.UserService;
 import com.userfront.service.Dao.PrimaryAccountDao;
 import com.userfront.service.Dao.SavingsAccountDao;
@@ -27,6 +28,9 @@ public class AccountServiceImpl implements AccountService{
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private TransactionService transactionService;
 
 	private static int nextAccountNumber;
 	
@@ -57,18 +61,21 @@ public class AccountServiceImpl implements AccountService{
 			// if not, create new account
 			primaryAccountDao.save(primaryAccount);
 			Date date = new Date();
-			PrimaryTransaction primaryTransaction = new PrimaryTransaction(date, "Deposit to Primary Account", "Account", "Finished", amount,primaryAccount.getAccountBalance(), primaryAccount );
+			PrimaryTransaction primaryTransaction = new PrimaryTransaction(date, "Deposit to Primary Account", "Account", "Finished",amount,primaryAccount.getAccountBalance(), primaryAccount );
+			transactionService.savePrimaryDepositTransaction(primaryTransaction);
 		}else if(accountType.equalsIgnoreCase("Savings")) {
 			SavingsAccount savingsAccount = user.getSavingsAccount();
 			savingsAccount.setAccountBalance(savingsAccount.getAccountBalance().add(new BigDecimal(amount)));
 			savingsAccountDao.save(savingsAccount);
 			Date date = new Date();
-			SavingsTransaction savingsTransaction = new SavingsTransaction(date, "Deposit to savings Account", "Account", "Finished", amount, savingsAccount.getAccountBalance(), savingsAccount);
+			SavingsTransaction savingsTransaction = new SavingsTransaction(date, "Deposit to savings Account", "Account", "Finished",amount, savingsAccount.getAccountBalance(), savingsAccount);
+			transactionService.saveSavingsDepositTransaction(savingsTransaction);
 		}
 	}
 	
 	// take number now-> double
 		public void withdraw(String accountType, double amount, Principal principal) {
+			Double x = Double.parseDouble("-"+ Double.toString(amount));
 			User user = userService.findByUsername(principal.getName());
 			// use principal to find user
 			if(accountType.equalsIgnoreCase("Primary")) {
@@ -79,13 +86,15 @@ public class AccountServiceImpl implements AccountService{
 				primaryAccountDao.save(primaryAccount);
 				Date date = new Date();
 				
-				PrimaryTransaction primaryTransaction = new PrimaryTransaction(date, "Withdraw from Primary Account", "Account", "Finished", amount,primaryAccount.getAccountBalance(), primaryAccount );
+				PrimaryTransaction primaryTransaction = new PrimaryTransaction(date, "Withdraw from Primary Account", "Account", "Finished", x, primaryAccount.getAccountBalance(), primaryAccount );
+				transactionService.savePrimaryWithdrawTransaction(primaryTransaction);
 			}else if(accountType.equalsIgnoreCase("Savings")) {
 				SavingsAccount savingsAccount = user.getSavingsAccount();
 				savingsAccount.setAccountBalance(savingsAccount.getAccountBalance().subtract(new BigDecimal(amount)));
 				savingsAccountDao.save(savingsAccount);
 				Date date = new Date();
-				SavingsTransaction savingsTransaction = new SavingsTransaction(date, "Withdraw from savings Account", "Account", "Finished", amount, savingsAccount.getAccountBalance(), savingsAccount);
+				SavingsTransaction savingsTransaction = new SavingsTransaction(date, "Withdraw from savings Account", "Account", "Finished", x, savingsAccount.getAccountBalance(), savingsAccount);
+				transactionService.saveSavingsWithdrawTransaction(savingsTransaction);
 			}
 		}
 	

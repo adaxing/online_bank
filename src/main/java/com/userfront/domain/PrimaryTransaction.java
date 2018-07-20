@@ -35,6 +35,7 @@ public class PrimaryTransaction {
 		this.availableBalance = availableBalance;
 		this.primaryAccount = primaryAccount; 
 	}
+	
 	// many transactions corresponds to one account
 	@ManyToOne
 	@JoinColumn(name = "primary_account_id")

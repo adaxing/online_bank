@@ -23,13 +23,14 @@ public class SavingsTransaction {
 	private double amount;
 	private BigDecimal availableBalance;
 	
+	
 	@ManyToOne
 	@JoinColumn(name = "savings_account_id")
 	private SavingsAccount savingsAccount;
 	
 	public SavingsTransaction() {}
 	
-	public SavingsTransaction(Date date, String description, String type, String status, double amount,
+	public SavingsTransaction(Date date, String description, String type, String status,double amount,
 			BigDecimal availableBalance, SavingsAccount savingsAccount) {
 		this.date = date;
 		this.description = description;
