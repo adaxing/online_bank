@@ -1,14 +1,17 @@
 package com.userfront.service.UserServiceImpl;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.userfront.domain.PrimaryAccount;
 import com.userfront.domain.PrimaryTransaction;
+import com.userfront.domain.Recipient;
 import com.userfront.domain.SavingsAccount;
 import com.userfront.domain.SavingsTransaction;
 import com.userfront.domain.User;
@@ -18,6 +21,7 @@ import com.userfront.service.Dao.PrimaryAccountDao;
 import com.userfront.service.Dao.PrimaryTransactionDao;
 import com.userfront.service.Dao.SavingsAccountDao;
 import com.userfront.service.Dao.SavingsTransactionDao;
+import com.userfront.service.Dao.recipientDao;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -36,6 +40,9 @@ public class TransactionServiceImpl implements TransactionService {
 	
 	@Autowired
 	private SavingsAccountDao savingsAccountDao;
+	
+	@Autowired 
+	private recipientDao recipientDao;
 
 	public List<PrimaryTransaction> findPrimaryTransactionList(String username) {
 		User user = userService.findByUsername(username);
@@ -91,6 +98,23 @@ public class TransactionServiceImpl implements TransactionService {
 		} else {
 			throw new Exception("Invalid Transfer");
 		}
-	} 
+	}
+	
+	public List<Recipient> findRecipientList(Principal principal) {
+		String username = principal.getName();
+		List<Recipient> recipientList = recipientDao.findAll().stream()
+				.filter(recipient -> username.equals(recipient.getUser().getUsername()))
+				.collect(Collectors.toList());
+		return recipientList;			
+	}
+	public Recipient saveRecipient(Recipient recipient) {
+		return recipientDao.save(recipient);
+	}
+	public Recipient findRecipientByName(String recipientName) {
+		return recipientDao.findByName(recipientName);
+	}
+	public void deleteRecipientByName(String recipientName) {
+		recipientDao.deleteByName(recipientName);
+	}
 
 }
