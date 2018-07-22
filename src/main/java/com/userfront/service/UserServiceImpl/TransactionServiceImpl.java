@@ -70,7 +70,24 @@ public class TransactionServiceImpl implements TransactionService {
 	public void saveSavingsWithdrawTransaction(SavingsTransaction savingsTransaction) {
 		savingsTransactionDao.save(savingsTransaction);
 	}
-	
+	public void toSomeoneElseTransfer(Recipient recipient,String accountType,String amount,PrimaryAccount primaryAccount,SavingsAccount savingsAccount) {
+		if (accountType.equalsIgnoreCase("Primary")) {
+			Double x = Double.parseDouble("-"+ amount);
+			primaryAccount.setAccountBalance(primaryAccount.getAccountBalance().subtract(new BigDecimal(amount)));
+			primaryAccountDao.save(primaryAccount);
+			Date date = new Date();
+			
+			PrimaryTransaction primaryTransaction = new PrimaryTransaction(date, "Transfer to recipient "+ recipient.getName(), "Transfer", "Finished", x, primaryAccount.getAccountBalance(), primaryAccount );
+			primaryTransactionDao.save(primaryTransaction);
+		} else if (accountType.equalsIgnoreCase("Savings")) {
+			Double x = Double.parseDouble("-"+ amount);
+			savingsAccount.setAccountBalance(savingsAccount.getAccountBalance().subtract(new BigDecimal(amount)));
+			savingsAccountDao.save(savingsAccount);
+			Date date = new Date();
+			SavingsTransaction savingsTransaction = new SavingsTransaction(date, "Transfer to recipient "+recipient.getName(), "Transfer", "Finished", x, savingsAccount.getAccountBalance(), savingsAccount);
+			savingsTransactionDao.save(savingsTransaction);
+		}
+	}
 	public void betweenAccountTransfer(String transferFrom, String transferTo,String amount,PrimaryAccount primaryAccount,SavingsAccount savingsAccount) throws Exception {
 		if (transferFrom.equalsIgnoreCase("Primary") && transferTo.equalsIgnoreCase("Savings")) {
 			Double x = Double.parseDouble("-"+ amount);
