@@ -1,6 +1,8 @@
 # online_bank
 
-- I am learning from Udemy to make online_bank project. It is a project with combination of frontend and backend. 
+- I am learning from Udemy to make online_bank project. It is a project with combination of frontend and backend.
+  - frontend: Angular 
+  - backend: Java spring
 - Currently, it has basic user functions
     - register new user 
     ![alt text](public/demo10.jpg)
